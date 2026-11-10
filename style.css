@@ -1,0 +1,433 @@
+/* Compagnie K — thème tiré du logo : anthracite, gris acier, cramoisi */
+:root {
+  --bg: #121115;
+  --bg-2: #1b191f;
+  --panel: #201e25;
+  --steel: #3a3d44;
+  --steel-light: #9a9ca3;
+  --crimson: #a3141b;
+  --crimson-dark: #7a0c11;
+  --red: #e2353c;
+  --text: #e9e8ec;
+  --muted: #a9a7b0;
+  --radius: 4px;
+  --max: 1100px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(1200px 600px at 50% -10%, rgba(163, 20, 27, .18), transparent 70%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0 1px, transparent 1px 4px);
+  color: var(--text);
+  font-family: "Barlow", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main { flex: 1; }
+a { color: var(--red); }
+h1, h2, h3 { font-family: "Russo One", sans-serif; font-weight: 400; line-height: 1.2; letter-spacing: .02em; }
+.label {
+  font-family: "Rajdhani", sans-serif; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .22em; font-size: .8rem; color: var(--red);
+}
+.ck-logo { display: inline-block; line-height: 0; }
+.ck-logo svg { width: 100%; height: 100%; display: block; }
+
+/* ---------- En-tête ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(18, 17, 21, .92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--steel);
+  box-shadow: 0 2px 0 var(--crimson-dark);
+}
+.site-header .inner {
+  max-width: var(--max); margin: 0 auto; padding: 10px 16px;
+  display: flex; align-items: center; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
+.brand .ck-logo { width: 46px; height: 46px; }
+.brand span:last-child { font-family: "Russo One", sans-serif; font-size: 1.15rem; letter-spacing: .04em; }
+.site-nav { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
+.site-nav a {
+  font-family: "Rajdhani", sans-serif; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .14em; font-size: .9rem;
+  color: var(--muted); text-decoration: none;
+  padding: 8px 12px; border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.site-nav a:hover { color: var(--text); border-color: var(--steel-light); }
+.site-nav a[aria-current="page"] { color: var(--text); border-color: var(--red); }
+.site-nav a.ext::after { content: " ↗"; font-size: .8em; }
+.nav-toggle {
+  display: none; margin-left: auto;
+  background: none; border: 1px solid var(--steel); color: var(--text);
+  border-radius: var(--radius); padding: 6px 10px; font: inherit; cursor: pointer;
+}
+
+/* ---------- Bandeau de page ---------- */
+.page-head {
+  text-align: center; padding: 64px 16px 40px;
+  border-bottom: 1px solid var(--steel);
+  background: linear-gradient(180deg, transparent, rgba(122, 12, 17, .12));
+}
+.page-head h1 { font-size: clamp(2rem, 5vw, 3.2rem); margin: 8px 0 0; }
+.page-head p { color: var(--muted); max-width: 640px; margin: 12px auto 0; }
+
+.container { max-width: var(--max); margin: 0 auto; padding: 48px 16px 72px; }
+.narrow { max-width: 780px; }
+
+/* Séparateur reprenant le bandeau du logo */
+.bar {
+  display: flex; align-items: center; gap: 14px; margin: 0 auto;
+  max-width: 340px; color: var(--steel-light);
+}
+.bar::before, .bar::after { content: ""; flex: 1; height: 3px; background: var(--crimson); }
+.bar span { font-weight: 700; font-size: 1.1rem; }
+
+/* ---------- Accueil ---------- */
+.hero { text-align: center; padding: 88px 16px 64px; position: relative; }
+.hero h1 { font-size: clamp(2.4rem, 7vw, 4.4rem); margin: 0 0 6px; }
+
+/* ---------- Arrière-plan animé (accueil uniquement) ---------- */
+/* Le fond commence sous l'en-tête pour ne jamais masquer la tête des clones */
+.home-bg { position: fixed; inset: 67px 0 0; z-index: -1; overflow: hidden; background: var(--bg); }
+.home-bg > div { position: absolute; inset: 0; }
+.home-bg .home-bg-img {
+  /* zoom limité, ancré en haut à gauche : le droïde de gauche et les casques restent dans le cadre */
+  transform-origin: 12% 12%;
+  animation: ck-kenburns 45s ease-in-out infinite alternate;
+  will-change: transform;
+}
+/* Équivalent de « background-size: cover; background-position: 30% 18% »
+   mais avec des éléments positionnables en % de l'image */
+.home-bg-stage {
+  position: absolute; left: 30%; top: 18%;
+  width: max(100vw, (100vh - 67px) * 1792 / 1008);
+  aspect-ratio: 1792 / 1008;
+  transform: translate(-30%, -18%);
+}
+.home-bg-photo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.home-bg-fx { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+
+/* Droïdes au loin : pieds posés sur l'horizon (--x / --y = point d'appui en % de l'image) */
+.droid {
+  position: absolute; left: var(--x); top: var(--y);
+  height: var(--h); aspect-ratio: 520 / 1050;
+  transform: translate(-49%, -99.4%);
+}
+.droid img {
+  width: 100%; height: 100%; display: block;
+  transform-origin: 49% 99.4%;
+  /* fondu dans la scène : assombri, brume chaude, contre-jour des incendies */
+  filter: brightness(.42) saturate(.55) sepia(.35) contrast(1.1) blur(.35px)
+          drop-shadow(0 0 3px rgba(255, 110, 40, .35));
+  /* le bas des pieds se fond dans les gravats */
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 4%);
+          mask-image: linear-gradient(to top, transparent 0, #000 4%);
+  animation: ck-droid-sway 1.8s ease-in-out infinite;
+  animation-delay: var(--d);
+}
+/* Poussière soulevée au ras du sol, devant les pieds */
+.droid::before {
+  content: ""; position: absolute; z-index: 1; left: 50%; bottom: -3%;
+  width: 160%; height: 9%; transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(60, 45, 38, .8), transparent);
+  filter: blur(1px);
+}
+.droid.flip img { scale: -1 1; }
+/* Ombre de contact sous le pied d'appui */
+.droid::after {
+  content: ""; position: absolute; z-index: -1; left: 49%; bottom: -2%;
+  width: 140%; height: 7%; transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(0, 0, 0, .9), transparent);
+  animation: ck-droid-shadow 1.8s ease-in-out infinite;
+  animation-delay: var(--d);
+}
+@keyframes ck-droid-sway {
+  0%, 100% { transform: rotate(-1.6deg) scaleY(1); }
+  50% { transform: rotate(1.6deg) scaleY(.985); }
+}
+@keyframes ck-droid-shadow {
+  0%, 100% { transform: translateX(-56%); }
+  50% { transform: translateX(-44%); }
+}
+.home-bg-fire {
+  background:
+    radial-gradient(28% 32% at 5% 38%, rgba(255, 110, 30, .45), transparent 70%),
+    radial-gradient(26% 30% at 95% 44%, rgba(255, 110, 30, .4), transparent 70%),
+    radial-gradient(40% 18% at 60% 50%, rgba(255, 90, 20, .18), transparent 70%);
+  mix-blend-mode: screen;
+  animation: ck-flicker 2.6s ease-in-out infinite;
+}
+.home-bg-flash {
+  background: radial-gradient(45% 35% at 62% 8%, rgba(190, 205, 255, .55), transparent 70%);
+  mix-blend-mode: screen; opacity: 0;
+  animation: ck-lightning 11s linear infinite 3s;
+}
+.home-bg-shade {
+  background:
+    linear-gradient(180deg, rgba(18, 17, 21, .55) 0%, rgba(18, 17, 21, .15) 30%, rgba(18, 17, 21, .35) 60%, rgba(18, 17, 21, .95) 100%),
+    radial-gradient(ellipse at center, transparent 45%, rgba(10, 9, 12, .7) 100%);
+}
+.home-bg-dim { background: var(--bg); opacity: 0; }
+.ember {
+  position: absolute; bottom: -12px; border-radius: 50%;
+  background: #ffc27a; box-shadow: 0 0 6px 2px rgba(255, 110, 30, .75);
+  opacity: 0; animation: ck-rise linear infinite;
+}
+@keyframes ck-kenburns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
+@keyframes ck-flicker {
+  0%, 100% { opacity: .6; }
+  15% { opacity: .85; } 30% { opacity: .55; } 45% { opacity: .95; }
+  60% { opacity: .65; } 80% { opacity: .9; }
+}
+@keyframes ck-lightning {
+  0%, 88%, 100% { opacity: 0; }
+  89% { opacity: .9; } 90% { opacity: .1; } 91.5% { opacity: .7; } 94% { opacity: 0; }
+}
+@keyframes ck-rise {
+  0%   { transform: translate3d(0, 0, 0); opacity: 0; }
+  10%  { opacity: 1; }
+  70%  { opacity: .8; }
+  100% { transform: translate3d(var(--dx, 0), -75vh, 0); opacity: 0; }
+}
+
+.home .hero {
+  min-height: calc(100vh - 67px); min-height: calc(100svh - 67px);
+  display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 10vh;
+}
+.home .hero h1 { text-shadow: 0 4px 30px rgba(0, 0, 0, .9), 0 0 2px rgba(0, 0, 0, .8); }
+.home .hero .motto, .home .hero p.intro { text-shadow: 0 2px 12px rgba(0, 0, 0, .95); }
+.home .hero p.intro { color: #d4d2da; }
+.home .stats { background: rgba(27, 25, 31, .82); backdrop-filter: blur(6px); }
+.home .section-title h2 { text-shadow: 0 2px 16px rgba(0, 0, 0, .9); }
+
+@media (prefers-reduced-motion: reduce) {
+  .home-bg .home-bg-img, .home-bg-fire, .home-bg-flash,
+  .droid img, .droid::after { animation: none; }
+  .home-bg-embers { display: none; }
+}
+.hero .motto {
+  font-family: "Rajdhani", sans-serif; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .4em; color: var(--red); font-size: clamp(.95rem, 2.4vw, 1.2rem);
+}
+.hero p.intro { color: var(--muted); max-width: 620px; margin: 22px auto 0; }
+
+.stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--steel); background: var(--bg-2);
+  max-width: var(--max); margin: 0 auto;
+}
+.stats div { padding: 22px 16px; text-align: center; border-left: 1px solid var(--steel); }
+.stats div:first-child { border-left: 0; }
+.stats strong { display: block; font-family: "Russo One", sans-serif; font-size: 1.7rem; font-weight: 400; color: var(--text); }
+.stats span { font-family: "Rajdhani", sans-serif; text-transform: uppercase; letter-spacing: .15em; font-size: .8rem; color: var(--muted); font-weight: 600; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 960px) { .grid-3 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .grid-3 { grid-template-columns: 1fr; } }
+.card {
+  background: var(--panel); border: 1px solid var(--steel); border-radius: var(--radius);
+  padding: 22px; position: relative; overflow: hidden;
+}
+.card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--crimson);
+}
+a.card { text-decoration: none; color: var(--text); transition: border-color .15s, transform .15s; }
+a.card:hover { border-color: var(--steel-light); transform: translateY(-2px); }
+a.card:hover h3 { color: var(--red); }
+.card-media {
+  overflow: hidden;
+  height: 180px; margin: -22px -22px 18px; padding: 18px;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 50% 60%, rgba(163, 20, 27, .22), transparent 70%), var(--bg-2);
+  border-bottom: 1px solid var(--steel);
+}
+.card-media img {
+  max-width: 100%; max-height: 100%; object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .6));
+}
+.card-media img.fill { width: 100%; height: 100%; object-fit: cover; transform: scale(1.35); }
+.card h3 { margin: 6px 0 8px; font-size: 1.2rem; transition: color .15s; }
+.card p { margin: 0; color: var(--muted); font-size: .97rem; }
+
+.section-title { text-align: center; margin: 0 0 28px; }
+.section-title h2 { margin: 6px 0 0; font-size: 1.8rem; }
+
+/* ---------- Texte courant ---------- */
+.prose p { margin: 0 0 1.1em; }
+.prose h2 { font-size: 1.5rem; margin: 2em 0 .6em; }
+blockquote.motto-quote {
+  margin: 40px 0 0; padding: 26px; text-align: center;
+  border: 1px solid var(--steel); border-left: 3px solid var(--crimson); background: var(--bg-2);
+  font-family: "Russo One", sans-serif; font-size: 1.5rem; color: var(--text);
+}
+blockquote.motto-quote cite { display: block; margin-top: 6px; font-style: normal; }
+
+/* ---------- Règlement ---------- */
+.preamble {
+  background: var(--bg-2); border: 1px solid var(--steel); border-left: 3px solid var(--crimson);
+  padding: 20px 22px; margin-bottom: 40px; border-radius: var(--radius);
+}
+.preamble p { margin: 6px 0 0; color: var(--muted); }
+.toc { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+.toc a {
+  font-family: "Rajdhani", sans-serif; font-weight: 700; font-size: .85rem; letter-spacing: .1em;
+  text-transform: uppercase; text-decoration: none; color: var(--muted);
+  border: 1px solid var(--steel); padding: 6px 12px; border-radius: 999px;
+}
+.toc a:hover { color: var(--text); border-color: var(--red); }
+.article { margin-bottom: 36px; scroll-margin-top: 90px; }
+.article h2 {
+  display: flex; align-items: baseline; gap: 14px; font-size: 1.3rem; margin: 0 0 12px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--steel);
+}
+.article h2 .num { color: var(--red); font-size: 1rem; }
+.rules { list-style: none; margin: 0; padding: 0; }
+.rules li { display: grid; grid-template-columns: 52px 1fr; gap: 8px; padding: 9px 0; border-bottom: 1px dashed rgba(58, 61, 68, .6); }
+.rules li:last-child { border-bottom: 0; }
+.rules b { font-family: "Rajdhani", sans-serif; color: var(--steel-light); font-weight: 700; }
+
+/* ---------- Perso RP ---------- */
+.dossier { margin-bottom: 40px; scroll-margin-top: 90px; }
+.dossier header {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  padding: 18px 22px; background: var(--bg-2); border: 1px solid var(--steel); border-bottom: 3px solid var(--crimson);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.dossier .matricule {
+  font-family: "Rajdhani", sans-serif; font-weight: 700; font-size: 1rem; letter-spacing: .1em;
+  color: var(--bg); background: var(--steel-light); padding: 2px 10px; border-radius: 2px;
+}
+.dossier h2 { margin: 0; font-size: 1.6rem; }
+.dossier .role { margin-left: auto; }
+.dossier .body { padding: 24px 22px 8px; border: 1px solid var(--steel); border-top: 0; background: var(--panel); border-radius: 0 0 var(--radius) var(--radius); }
+
+/* Portrait à gauche de la présentation */
+.has-portrait { display: grid; grid-template-columns: 240px 1fr; gap: 26px; align-items: start; }
+.portrait {
+  margin: 0 0 16px; position: sticky; top: 90px;
+  border: 1px solid var(--steel); border-left: 3px solid var(--crimson); border-radius: var(--radius);
+  overflow: hidden; background: var(--bg-2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
+}
+.portrait img { display: block; width: 100%; height: auto; }
+@media (max-width: 640px) {
+  .has-portrait { grid-template-columns: 1fr; }
+  .portrait { position: static; max-width: 280px; margin: 0 auto 20px; }
+}
+
+/* ---------- Décor des pages intérieures ---------- */
+.page-bg {
+  position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+  background: linear-gradient(180deg, #0c0b0f 0%, #121014 45%, #1d1214 78%, #24130f 100%);
+}
+.page-bg > * { position: absolute; inset: 0; }
+/* Nuages d'orage qui dérivent lentement */
+.pb-clouds {
+  inset: -10% -30%;
+  background:
+    radial-gradient(30% 22% at 18% 18%, rgba(80, 76, 90, .55), transparent 70%),
+    radial-gradient(26% 18% at 48% 10%, rgba(72, 70, 84, .5), transparent 70%),
+    radial-gradient(34% 24% at 78% 22%, rgba(78, 72, 86, .52), transparent 70%),
+    radial-gradient(40% 26% at 30% 42%, rgba(52, 44, 52, .55), transparent 70%),
+    radial-gradient(38% 22% at 85% 48%, rgba(70, 44, 38, .5), transparent 70%);
+  filter: blur(18px);
+  animation: pb-drift 90s ease-in-out infinite alternate;
+}
+/* Éclair diffus, rare */
+.pb-flash {
+  background: radial-gradient(40% 30% at 30% 12%, rgba(180, 195, 255, .28), transparent 70%);
+  opacity: 0; mix-blend-mode: screen;
+  animation: ck-lightning 17s linear infinite 6s;
+}
+/* Lueur des incendies sur l'horizon */
+.pb-glow {
+  background:
+    radial-gradient(30% 30% at 12% 92%, rgba(255, 100, 30, .5), transparent 70%),
+    radial-gradient(24% 22% at 52% 95%, rgba(255, 80, 20, .3), transparent 70%),
+    radial-gradient(32% 32% at 90% 92%, rgba(255, 105, 35, .45), transparent 70%),
+    linear-gradient(0deg, rgba(120, 30, 15, .35) 0%, transparent 30%);
+  mix-blend-mode: screen;
+  animation: ck-flicker 3.2s ease-in-out infinite;
+}
+.pb-ruins { top: auto; height: min(34vh, 300px); width: 100%; }
+.pb-ruins .far { fill: #17111a; opacity: .95; }
+.pb-ruins .near { fill: #08070a; }
+/* Assombrit le centre pour la lecture */
+.pb-shade {
+  background:
+    linear-gradient(180deg, rgba(12, 11, 15, .25) 0%, rgba(12, 11, 15, .45) 50%, rgba(12, 11, 15, .15) 100%),
+    radial-gradient(ellipse at center, transparent 50%, rgba(6, 5, 8, .6) 100%);
+}
+@keyframes pb-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-12%, 2%, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pb-clouds, .pb-flash, .pb-glow { animation: none; }
+}
+
+/* ---------- Curseur de visée ---------- */
+html.ck-cursor-on, html.ck-cursor-on * { cursor: none !important; }
+.ck-cursor {
+  position: fixed; left: 0; top: 0; z-index: 9999; pointer-events: none;
+  transition: opacity .2s;
+}
+html.ck-cursor-out .ck-cursor { opacity: 0; }
+.ck-cursor-dot {
+  width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%;
+  background: var(--red); box-shadow: 0 0 8px 2px rgba(226, 53, 60, .7);
+}
+.ck-cursor-ring { width: 38px; height: 38px; margin: -19px 0 0 -19px; color: var(--red); }
+.ck-cursor-ring svg {
+  width: 100%; height: 100%; display: block; overflow: visible;
+  filter: drop-shadow(0 0 4px rgba(226, 53, 60, .6));
+  opacity: .85;
+  transition: transform .25s ease, opacity .2s, color .2s;
+}
+/* Sur un lien ou un bouton : la mire se verrouille (rotation + agrandissement) */
+.ck-cursor-ring.is-hover svg { transform: scale(1.45) rotate(45deg); opacity: 1; color: #ff5a60; }
+.ck-cursor-ring.is-down svg { transform: scale(.7) rotate(90deg); opacity: 1; }
+.ck-cursor-ring.is-hover.is-down svg { transform: scale(1.1) rotate(90deg); }
+
+/* ---------- Pied de page ---------- */
+.site-footer { border-top: 1px solid var(--steel); background: var(--bg-2); }
+.site-footer .inner {
+  max-width: var(--max); margin: 0 auto; padding: 24px 16px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: .9rem;
+}
+.site-footer .ck-logo { width: 34px; height: 34px; }
+.site-footer .motto { margin-left: auto; font-family: "Rajdhani", sans-serif; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; color: var(--red); }
+
+/* ---------- Mobile ---------- */
+@media (max-width: 860px) {
+  .nav-toggle { display: block; }
+  .site-nav {
+    display: none; position: absolute; left: 0; right: 0; top: 100%;
+    flex-direction: column; background: var(--bg); border-bottom: 1px solid var(--steel); padding: 8px 16px;
+  }
+  .nav-open .site-nav { display: flex; }
+  .site-nav a { border-bottom: 0; border-left: 2px solid transparent; }
+  .site-nav a[aria-current="page"] { border-left-color: var(--red); }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .stats div:nth-child(3) { border-left: 0; }
+  .stats div:nth-child(n+3) { border-top: 1px solid var(--steel); }
+  .dossier .role { margin-left: 0; width: 100%; }
+}
+@media (max-width: 480px) {
+  .rules li { grid-template-columns: 44px 1fr; }
+  .site-footer .motto { margin-left: 0; }
+}
